@@ -12,6 +12,7 @@
             $con_password =$_POST['confirm_pass'];
             $code=rand(10000,99999);
             $errors=[];
+
             // class validation 
             include_once 'validation.php';
             $validate = new validation();
@@ -28,16 +29,21 @@
             
             $validate->setPassword($password);
             $validate->setConfirmPassword($con_password);
-            $errors['password'] = $validate->passwordValidation();
+            $errors['password_confirm'] = $validate->passwordValidation();
+            
             //email validation 
             $validate->setEmail($email);
             $validate->getEmail();
             $errors['email']=$validate->validateEmail();
-            echo '<pre>';
-            print_r($errors);
-            echo'</pre>';
+            
+
+            // phone validation
+            $validate->setPhone($phone);
+            $validate->getPhone();
+            $errors['phone']=$validate->validatePhone();
+            
             //insert user data
-           
+             
               
         }
         ?>
@@ -95,6 +101,13 @@
                 </div>
             </div>
 
+            <?php 
+            if (isset($errors['phone'])) {
+
+                echo $errors['phone'];
+             
+           }?>
+
            
 
             <div class="row col-10 mb-3">
@@ -105,13 +118,9 @@
             </div>
 
             <?php 
-             if (isset( $errors['password'])) {
-
-                foreach ($errors['password'] as $key => $value) {
-                   echo $value;
-                }
-             
-             }?>
+             if (isset( $errors['password_confirm']['password'])) {
+                echo $errors['password_confirm']['password'] ;
+              }?>
 
             <div class="row col-10 mb-3">
                 <label for="inputEmail3" class="col-sm-4 col-form-label ">Confirm Password</label>
@@ -121,14 +130,10 @@
             </div>
 
             <?php 
-            if (isset( $errors['password'])) {
-
-                foreach ($errors['password'] as $key => $value) {
-                   echo'
-                    <div class="alert alert-danger col-10 mx-auto">
-                       Please Confirm Password
-                    </div>' ;}
-         }?>
+            if (isset( $errors['password_confirm']['confirm'])) {
+                   echo $errors['password_confirm']['confirm'] ;
+                 }
+                   ?>
 
 
             <button type="submit" class="btn   ">Register</button>

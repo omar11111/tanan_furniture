@@ -41,7 +41,7 @@ class validation{
              Password confirmation is wrong
            </div>';
         }
-        
+
         if (isset($errors)) {
             return $errors;
         }
@@ -103,7 +103,42 @@ class validation{
         }
         return $errors['name'];
     }
+
+    //end name validation
+   
+    //phone validation
+    public function setPhone($phone)
+    {
+        $this->phone=$phone;
+    }
+
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+     
+
+    public function validatePhone()
+    {
+        $pattern ="/(01)[0-9]{9}/";
+        if (!preg_match($pattern,$this->phone)) {
+            $errors['phone']='
+            <div class="alert alert-danger col-10 mx-auto">
+             Please Enter Valid number starts with "01" number length  must be 11 number
+            </div>';
+            
+        }
+
+        if (isset( $errors['phone'])) {
+            return $errors['phone'];
+        }
+       
+    }
+
+
 }
+
+
 
 
 

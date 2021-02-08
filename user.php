@@ -146,6 +146,13 @@ class user extends connection implements operation {
         
     }
 
+    public function checkEmail()
+    {
+     $query="SELECT `users`.* FROM `users` WHERE  `users`.`email` =$this->email";
+     return  $this->runDQL($query);
+
+    }
+
     // insertData
     // deleteData
     // updateData
