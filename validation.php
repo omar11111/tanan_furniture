@@ -94,14 +94,15 @@ class validation{
 
     public function validateName()
     {
-        $pattern ="/\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+/";
+        $pattern ="/^[a-z ,A-Z,.'-]+$/";
         if (!preg_match($pattern,$this->name)) {
             $errors['name']='
             <div class="alert alert-danger col-10 mx-auto">
               Name must contain Characters only
             </div>';
+            return $errors['name'];
         }
-        return $errors['name'];
+       
     }
 
     //end name validation

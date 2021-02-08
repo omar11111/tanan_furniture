@@ -148,9 +148,15 @@ class user extends connection implements operation {
 
     public function checkEmail()
     {
-     $query="SELECT `users`.* FROM `users` WHERE  `users`.`email` =$this->email";
+     $query="SELECT `users`.* FROM `users` WHERE  `users`.`email` =`$this->email`";
      return  $this->runDQL($query);
 
+    }
+
+    public function userLogin()
+    {
+      $query="SELECT `users`.* FROM `users` WHERE  `users`.`email` =`$this->email` &&`users`.`password`=`$this->password`";
+      return  $this->runDQL($query);
     }
 
     // insertData

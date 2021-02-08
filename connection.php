@@ -1,48 +1,44 @@
-<?php 
+<?php
 
 class connection {
-    public $localhost = 'localhost';
-    public $dbname = 'nti_ecommerce';
-    public $user = 'root';
-    public $password = '';
+    public $DBserverName = 'localhost';
+    public $DBusername = 'root';
+    public $DBpassword = '';
+    public $DBname = 'nti_ecommerce_last';
     public $con;
 
     public function __construct()
     {
-        //
-        $this->con = new mysqli($this->localhost,$this->user,$this->password,$this->dbname);
-        
-        if ($this->con->connect_error) {
-           die('connection failed'.$this->con->connect_error);
-        }else{}
+       $this->con =  new mysqli($this->DBserverName,$this->DBusername,$this->DBpassword,$this->DBname);
+       if($this->con->connect_error){
+           die("connection failed". $this->con->connect_error);
+       }else{
+           echo "DB is connected";
+       }
     }
 
     public function runDML($query)
     {
-        // insert / update / delete
-        $result = $this ->con->query($query);
-        if ($result === true) {
-            return true;
+        # code... inseret / update / delete
+        # $con 
+        #  "DELETE FROM users"
+        $result = $this->con->query($query);
+        if($result === TRUE){
+            return TRUE;
         }else{
-            return false;
+            return FALSE;
         }
-
-
-
     }
 
     public function runDQL($query)
     {
-       // select
-
-       $result = $this->con->query($query);
-       if ($result->num_rows > 0)
-       {
-           return $result;
-       }else
-       {
-          return [];
-       }
-
+        # code...  / selects
+        $result = $this->con->query($query);
+        if($result->num_rows > 0){
+            return $result;
+        }else{
+            return [];
+        }
     }
+    
 }
