@@ -11,10 +11,17 @@
             $password =$_POST['password'];
             $con_password =$_POST['confirm_pass'];
             $code=rand(10000,99999);
-
-            //password validation
+            
+            // class validation 
             include_once 'validation.php';
             $validate = new validation();
+            //name validation 
+            
+
+
+            //password validation
+           
+            
             $validate->setPassword($password);
             $validate->setConfirmPassword($con_password);
             $password_validation =$validate-> passwordValidation();

@@ -47,7 +47,7 @@ class validation{
        
 
     }
-
+    // end pass validation
     
     //validate email
     
@@ -78,6 +78,33 @@ class validation{
         
        
     }
+    // end email validation
+
+    // name validation 
+    public function setName($name)
+    {
+       $this->name=$name;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function validateName($name)
+    {
+        $pattern ="/\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+/";
+        if (!preg_match($pattern,$name)) {
+            $errors['name']='
+            <div class="alert alert-danger col-10 mx-auto">
+              Name must contain Characters only
+            </div>';
+        }
+    }
 }
+
+
+
+
 
 ?>
