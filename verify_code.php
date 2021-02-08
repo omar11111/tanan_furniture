@@ -45,7 +45,19 @@
            }
 
         }
-     }
+
+       }
+
+       if (!empty($_POST) && empty($emailValidation)) {
+           //set Active
+       }else{
+        $errors['wrong_code']='
+        <div class="alert alert-danger col-10 mx-auto">
+          Wrong Code 
+        </div>';
+       }
+
+
      
      
     ?>
