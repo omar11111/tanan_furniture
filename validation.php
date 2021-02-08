@@ -29,7 +29,7 @@ class validation{
         $password_pattern ='/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/';
         
         if (!preg_match($password_pattern,$this->password)) {
-           $errors['pattern']='
+           $errors['password']='
             <div class="alert alert-danger col-10 mx-auto">
               Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special characte
             </div>';
@@ -41,6 +41,7 @@ class validation{
              Password confirmation is wrong
            </div>';
         }
+        
         if (isset($errors)) {
             return $errors;
         }
@@ -91,15 +92,16 @@ class validation{
         return $this->name;
     }
 
-    public function validateName($name)
+    public function validateName()
     {
         $pattern ="/\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+/";
-        if (!preg_match($pattern,$name)) {
+        if (!preg_match($pattern,$this->name)) {
             $errors['name']='
             <div class="alert alert-danger col-10 mx-auto">
               Name must contain Characters only
             </div>';
         }
+        return $errors['name'];
     }
 }
 
