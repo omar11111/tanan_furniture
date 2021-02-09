@@ -128,13 +128,28 @@ class user extends connection implements operation {
 
     public function insertData()
     {
-        $query = "INSERT INTO `users` (`users`.`first_name`,`users`.`last_name`,`users`.`phone`,`users`.`email`,`users`.`gender`,
-        `users`.`password`,`users`.`code`) VALUES ('$this->first_name','$this->last_name','$this->phone','$this->email',
-        '$this->gender','$this->password','$this->code') ";
+       $query=" INSERT INTO
+        `users`( `users`.`first_name`, `users`.`last_name`, `users`.`email`,
+                 `users`.`phone`, `users`.`password`,   `users`.`gender`,  `users`.`code`)
+        VALUES (`$this->first_name`,`$this->last_name`,`$this->email`,
+               `$this->phone`,`$this->password`,`$this->gender`,`$this->code`)";
+
+        
         // echo $query;
         return  $this->runDML($query);
         
     }
+
+    
+    // public function insertData()
+    // {
+    //     $query = "INSERT INTO `users` (`users`.`first_name`,`users`.`last_name`,`users`.`phone`,`users`.`email`,`users`.`gender`,
+    //     `users`.`password`,`users`.`code`) VALUES ('$this->first_name','$this->last_name','$this->phone','$this->email',
+    //     '$this->gender','$this->password','$this->code') ";
+    //     // echo $query;
+    //     return  $this->runDML($query);
+        
+    // }
 
     public function selectAllData(){
 

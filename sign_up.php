@@ -55,8 +55,6 @@ require 'vendor/autoload.php';
             $validate->setPhone($phone);
             $validate->getPhone();
             $errors['phone']=$validate->validatePhone();
-            
-            print_r($errors);
             //insert user data
              if (empty($errors['frist_name'])&& empty($errors['last_name'])
                  && empty($errors['email'])&&empty($errors['phone']) &&empty($errors['password_confirm'])) {
@@ -71,11 +69,11 @@ require 'vendor/autoload.php';
                 $user->setGender($gender);
                 $user->setCode($code);
                 $result = $user->insertData();                                  
-                
+                echo'returned value of quert insert '. $result;
                 // if the query successed
-                   if ($reuslt) {
+                   if ($result) {
                     // send code via mail
-
+                    echo '';
                     // Instantiation and passing `true` enables exceptions
                     $mail = new PHPMailer(true);
 
@@ -86,13 +84,13 @@ require 'vendor/autoload.php';
                         $mail->Host       = 'smtp.gmail.com';                    // Set the SMTP server to send through
                         $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
                         $mail->Username   = 'ntitasks@gmail.com';                     // SMTP username
-                        $mail->Password   = 'NTI@123456';                               // SMTP password
+                        $mail->Password   = 'NTI@123456';                              // SMTP password
                         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
                         $mail->Port       = 587;                                    // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
 
                         //Recipients
                         $mail->setFrom('ntitasks@gmail.com', 'Verfication Code');
-                        $mail->addAddress($email , $firstName);     // Add a recipient
+                        $mail->addAddress('algalfy71@gmail.com' , $first_name);     // Add a recipient
 
 
                         // Content
@@ -102,7 +100,7 @@ require 'vendor/autoload.php';
 
                         $mail->send();
                         // echo 'Message has been sent';
-                        header('Location:send-code.php?email='.$email);
+                        header('Location:verify_code.php?email='.$email);
 
                     } catch (Exception $e) {
                         echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
@@ -111,6 +109,7 @@ require 'vendor/autoload.php';
 
                 } else {
                     $errors['someThing'] = "<div class='alert alert-danger'> Something Went Wrong </div>";
+                    
                 }
                 
              }else{
@@ -127,12 +126,29 @@ require 'vendor/autoload.php';
            
             <div class="about-seconed-title">
                 <h1 class="col-6 col-md-6 mx-auto">Create An Account</h1>
+            
             </div>
 
             <div class="row col-10 mb-3 mx-auto">
+            <?php 
+            if (!empty($errors['allRequried'])){
+
+                echo $errors['allRequried'];
+             
+         }?>
+            <?php 
+            if (!empty($errors['someThing'])){
+
+                echo $errors['someThing'];
+             
+         }?>
+            </div>
+          
+          
+            <div class="row col-10 mb-3 mx-auto">
                 <label for="inputEmail3" class="col-sm-3 col-form-label ">Frist Name</label>
                 <div class="col-sm-10 mx-auto">
-                    <input type="text" class="form-control" id="inputEmail3" name="frist_name" value="<?php if(isset($_POST['first_name'])){echo $_POST['first_name'];} ?>" >
+                    <input type="text" class="form-control" id="inputEmail3" name="frist_name" value="<?php if(isset($_POST['frist_name'])){echo $_POST['frist_name'];} ?>" >
                 </div>
             </div>
 

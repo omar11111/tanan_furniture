@@ -13,7 +13,7 @@ class connection {
        if($this->con->connect_error){
            die("connection failed". $this->con->connect_error);
        }else{
-           echo "DB is connected";
+          // echo "DB is connected";
        }
     }
 
@@ -24,9 +24,9 @@ class connection {
         #  "DELETE FROM users"
         $result = $this->con->query($query);
         if($result === TRUE){
-            return TRUE;
+            return 1;
         }else{
-            return FALSE;
+            return 0;
         }
     }
 
