@@ -1,4 +1,7 @@
-<?php include_once "header.php"?>
+<?php include_once "header.php";
+if(isset($_SESSION['user'])){
+  header('Location:index.php');
+}?>
 
 <form class="col-12 col-md-6 mx-auto contact-form ">
     
@@ -17,14 +20,15 @@
       
     ?>
     <div class="row col-10 mb-3">
-      <label for="inputEmail3" class="col-sm-2 col-form-label ">Enter Code</label>
-      <div class="col-sm-10">
-        <input type="text" class="form-control" id="inputEmail3">
+      <label for="inputEmail3" class="col-sm-3 col-form-label ">Enter Code</label>
+      <div class="col-sm-9">
+        <input type="text" class="form-control" id="inputEmail3" name="code">
       </div>
     </div>
 
     <?php
      include_once 'validation.php';
+     include_once 'user.php';
      $validate =new validation();
      $errors=[];
      if (isset($email)) {
@@ -32,19 +36,19 @@
         $validate->setEmail($email);
         $emailValidation= $validate->validateEmail();
         if (empty($emailValidation)) {
-          // 
-           include_once 'user.php';
+
+          // chech if there is a user with  this email
            $user = new user();
            $user->setEmail($email);
            $result = $user->checkEmail();
            if (!empty($result)) {
                $user_data = $result->fetch_object();
-
            }else{
                $errors['user_data']='
                <div class="alert alert-danger col-10 mx-auto">
                  Email dosen\'t Exist 
                </div>';
+               echo $errors['user_data'];
            }
 
         }
@@ -52,12 +56,31 @@
        }
 
        if (!empty($_POST) && empty($emailValidation)) {
-           //set Active
-       }else{
-        $errors['wrong_code']='
-        <div class="alert alert-danger col-10 mx-auto">
-          Wrong Code 
-        </div>';
+           //if the inserted code is equal to the inserted code
+           if ($user_data->code == $_POST['code']) {
+            //Set User to Verified
+            $user->setId($_SESSION['user_data']['id']);
+            $user->setStatus(1);
+            $activation_result= $user->setUserActive();
+            //if the query successed
+           if ($activation_result) {
+              $_SESSION['user_data']=$user_data;
+              header('Location:index.php');
+           }else {
+            $errors['something']='
+            <div class="alert alert-danger col-10 mx-auto">
+              Some Thing Went Wrong 
+            </div>';
+            echo $errors['something'];
+           }
+           }else {
+            $errors['wrong_code']='
+            <div class="alert alert-danger col-10 mx-auto">
+              Wrong Code 
+            </div>';
+            echo $errors['wrong_code'];
+           }
+           
        }
 
 

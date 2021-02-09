@@ -90,7 +90,7 @@ require 'vendor/autoload.php';
 
                         //Recipients
                         $mail->setFrom('ntitasks@gmail.com', 'Verfication Code');
-                        $mail->addAddress('somayaashraf07@gmail.com' , $frist_name);     // Add a recipient
+                        $mail->addAddress($email , $frist_name);     // Add a recipient
 
 
                         // Content
@@ -147,7 +147,8 @@ require 'vendor/autoload.php';
             <div class="row col-10 mb-3 mx-auto">
                 <label for="inputEmail3" class="col-sm-3 col-form-label ">Frist Name</label>
                 <div class="col-sm-10 mx-auto">
-                    <input type="text" class="form-control" id="inputEmail3" name="frist_name" value="<?php if(isset($_POST['frist_name'])){echo $_POST['frist_name'];} ?>" >
+                    <input type="text" class="form-control" id="inputEmail3" name="frist_name"
+                     value="<?php if(isset($_POST['frist_name'])){echo $_POST['frist_name'];} ?>" >
                 </div>
             </div>
 

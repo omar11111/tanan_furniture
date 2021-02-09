@@ -172,7 +172,7 @@ class user extends connection implements operation {
         return $this->runDML($query);
     }
 
-    public function login()
+    public function userLogin()
     {
         $query = "SELECT `users`.* FROM `users` WHERE `users`.`email` = '$this->email' AND `users`.`password` = '$this->password' ";
         return $this->runDQL($query);

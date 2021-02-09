@@ -525,9 +525,13 @@ footer a:hover{
   }
   
  
-  .profile-image{
-      height: 150px;
+  /* dropdown-menu */
+  .dropdown-menu{
+    background-color: #b8802c;
+    color: #1b1a15;
   }
+
+
   
 
 @media screen and (min-width:320px) and (max-width:767px){

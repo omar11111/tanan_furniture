@@ -23,7 +23,7 @@ ob_start();
     <header>
     <!-- navbar start -->
     <nav class="navbar col-12  mx-auto navbar-expand-lg ">
-      <a class="col-7 col-md-6 navbar-brand" href="index.php">
+      <a class="col-7 col-md-5 navbar-brand" href="index.php">
         <span><img style="width: 50px;" src="images/logo.png" alt=""></span>
         Tanan </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
@@ -46,16 +46,46 @@ ob_start();
             <a class="nav-link" href="contact.php">Contact Us</a>
           </li>
 
-
-          <li class="nav-item">
-            <a class="nav-link" href="sign_in.php">Sign In</a>
+          
+          <?php if (isset($_SESSION['user_data'])) {
+              $display='none';
+            } ?>
+          <li class="nav-item" style="display:<?php echo(isset($display)? $display:'');?>">
+            
+            <a class="nav-link" href="sign_in.php" style="display:<?php echo(isset($display)? $display:''); ?>">Sign In</a>
           </li>
 
-          <li class="nav-item">
+          <li class="nav-item" style="display:<?php echo(isset($display)? $display:'');?>">
             <a class="nav-link" href="sign_up.php">Sign Up</a>
           </li>
+
+          <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="index.php" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+           
+             <?php echo(isset($_SESSION['user_data'])? 'Hello' .' '.$_SESSION['user_data']->first_name.' '.$_SESSION['user_data']->last_name:'Welcome');?>
+
+          </a>
+          <ul class="dropdown-menu  " aria-labelledby="navbarDropdown" >
+           
+            <li>
+                 
+                 <a class="dropdown-item" href="<?php echo(isset($_SESSION['user_data'])? 'user_account.php':'sign_up.php');?>">
+                  <?php echo(isset($_SESSION['user_data'])? 'My Account':'Register');?>
+                 </a>
+            </li>
+
+            <li>
+                 <a class="dropdown-item" href="<?php echo(isset($_SESSION['user_data'])? 'logout.php':'sign_in.php');?>">
+                  <?php echo(isset($_SESSION['user_data'])? 'Log Out':'Log in');?>
+                 </a>
+            </li>
+           
+          </ul>
+        </li>
 
         </ul>
       </div>
 
     </nav>
+
+    
