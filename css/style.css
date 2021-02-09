@@ -524,7 +524,10 @@ footer a:hover{
     background: #211b19;
   }
   
-  
+ 
+  .profile-image{
+      height: 150px;
+  }
   
 
 @media screen and (min-width:320px) and (max-width:767px){

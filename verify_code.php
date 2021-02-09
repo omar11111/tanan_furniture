@@ -6,6 +6,7 @@
         <h1 class="col-6 col-md-6 mx-auto">Verify code</h1>
     </div>
     <?php
+    // get email from url sent with header
       if (!empty($_GET)) {
          if (isset($_GET['email'])) {
              $email = $_GET['email'];
@@ -27,9 +28,11 @@
      $validate =new validation();
      $errors=[];
      if (isset($email)) {
+       // check that the email at it's correct form
         $validate->setEmail($email);
         $emailValidation= $validate->validateEmail();
         if (empty($emailValidation)) {
+          // 
            include_once 'user.php';
            $user = new user();
            $user->setEmail($email);

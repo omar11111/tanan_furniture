@@ -34,6 +34,7 @@ class connection {
     {
         # code...  / selects
         $result = $this->con->query($query);
+       
         if($result->num_rows > 0){
             return $result;
         }else{

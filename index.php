@@ -14,13 +14,15 @@
           <p>The Best place for furniture</p>
         </div>
       </div>
-      <div class="images image-slider2">
-        <div class="col-8 mx-auto content">
 
+      <div class="images image-slider2">
+        
+        <div class="col-8 mx-auto content">
           <h1>Many Products </h1>
           <p> Chairs ,Wardrobe and Beds </p>
         </div>
       </div>
+
       <div class="images    image-slider3">
         <div class="col-8 mx-auto content">
 
@@ -28,12 +30,12 @@
           <p>Haveing Greate Team make Greate Products</p>
         </div>
       </div>
+
       <div class="images   image-slider4">
         <div class="col-8 mx-auto  content">
           <h1 class="">Bedrooms</h1>
           <p class=" "> modern bedrooms that fit your style and life</p>
         </div>
-
       </div>
 
     </div>
@@ -43,7 +45,7 @@
     <!-- products -->
     <div class="row products col-12 mx-auto   ">
       <div class="card col-10  col-lg-5   ">
-        <img src="images/product1.jpeg" alt="">
+        <img class="img-fluid" data-mdb-ripple-color="light" src="images/product1.jpeg" alt="">
         <div class="content p-2">
           <h3 class="">title</h3>
           <p>littel description</p>

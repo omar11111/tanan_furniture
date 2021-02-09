@@ -53,11 +53,11 @@ require 'vendor/autoload.php';
 
             // phone validation
             $validate->setPhone($phone);
-            $validate->getPhone();
             $errors['phone']=$validate->validatePhone();
             //insert user data
              if (empty($errors['frist_name'])&& empty($errors['last_name'])
-                 && empty($errors['email'])&&empty($errors['phone']) &&empty($errors['password_confirm'])) {
+                 && empty($errors['email'])&&empty($errors['phone']) &&empty($errors['password_confirm']))
+                  {
                 
                 include_once "user.php";
                 $user = new user();
@@ -90,16 +90,16 @@ require 'vendor/autoload.php';
 
                         //Recipients
                         $mail->setFrom('ntitasks@gmail.com', 'Verfication Code');
-                        $mail->addAddress('algalfy71@gmail.com' , $first_name);     // Add a recipient
+                        $mail->addAddress('somayaashraf07@gmail.com' , $frist_name);     // Add a recipient
 
 
                         // Content
                         $mail->isHTML(true);                                  // Set email format to HTML
                         $mail->Subject = 'Verfiy';
-                        $mail->Body    = 'Your Verification Code is:<b>'.$code.'</b>';
+                        $mail->Body  = 'Your Verification Code is:<b>'.$code.'</b>';
 
                         $mail->send();
-                        // echo 'Message has been sent';
+                       
                         header('Location:verify_code.php?email='.$email);
 
                     } catch (Exception $e) {
@@ -126,7 +126,6 @@ require 'vendor/autoload.php';
            
             <div class="about-seconed-title">
                 <h1 class="col-6 col-md-6 mx-auto">Create An Account</h1>
-            
             </div>
 
             <div class="row col-10 mb-3 mx-auto">

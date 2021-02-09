@@ -1,4 +1,5 @@
 <?php 
+ 
 
 class validation{
     private $errors=[];
@@ -94,11 +95,12 @@ class validation{
 
     public function validateName()
     {
-        $pattern ="/^[a-z ,A-Z,.'-]+$/";
+        $pattern ="/^[a-zA-Z,.'-]{3,}$/";
         if (!preg_match($pattern,$this->name)) {
             $errors['name']='
             <div class="alert alert-danger col-10 mx-auto">
-              Name must contain Characters only
+              Name must contain Characters only and length
+               grater than 4 Characters 
             </div>';
             return $errors['name'];
         }

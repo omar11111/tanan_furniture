@@ -126,30 +126,20 @@ class user extends connection implements operation {
         $this->updated_at = $updatedAt;
     }
 
+
     public function insertData()
-    {
-       $query=" INSERT INTO
-        `users`( `users`.`first_name`, `users`.`last_name`, `users`.`email`,
-                 `users`.`phone`, `users`.`password`,   `users`.`gender`,  `users`.`code`)
-        VALUES (`$this->first_name`,`$this->last_name`,`$this->email`,
-               `$this->phone`,`$this->password`,`$this->gender`,`$this->code`)";
+ {
+    $query=" INSERT INTO
+     `users`( `users`.`first_name`, `users`.`last_name`, `users`.`email`,
+              `users`.`phone`, `users`.`password`,   `users`.`gender`,  `users`.`code`)
+     VALUES ('$this->first_name','$this->last_name','$this->email',
+            '$this->phone','$this->password','$this->gender','$this->code')";
 
-        
-        // echo $query;
-        return  $this->runDML($query);
-        
-    }
-
-    
-    // public function insertData()
-    // {
-    //     $query = "INSERT INTO `users` (`users`.`first_name`,`users`.`last_name`,`users`.`phone`,`users`.`email`,`users`.`gender`,
-    //     `users`.`password`,`users`.`code`) VALUES ('$this->first_name','$this->last_name','$this->phone','$this->email',
-    //     '$this->gender','$this->password','$this->code') ";
-    //     // echo $query;
-    //     return  $this->runDML($query);
-        
-    // }
+     
+     
+     return  $this->runDML($query);
+     
+ }
 
     public function selectAllData(){
 
@@ -158,22 +148,62 @@ class user extends connection implements operation {
 
     }
     public function updateData(){
-        
+        $query = "UPDATE `users` SET `users`.`first_name` = '$this->first_name' , `users`.`last_name` = '$this->last_name' 
+        , `users`.`phone` = $this->phone, `users`.`gender` = '$this->gender'";
+        if($this->photo){
+            $query .= ", `users`.`photo` = '$this->photo' ";
+        }
+        $query .= "WHERE `users`.`id` = $this->id ";
+        // echo $query;
+        return $this->runDML($query);
     }
 
     public function checkEmail()
     {
-     $query="SELECT `users`.* FROM `users` WHERE  `users`.`email` =`$this->email`";
-     return  $this->runDQL($query);
-
+        $query = "SELECT `users`.* FROM `users` WHERE `users`.`email` = '$this->email' ";
+        // echo $query;die;
+        return $this->runDQL($query);
     }
 
-    public function userLogin()
+    public function setUserActive()
     {
-      $query="SELECT `users`.* FROM `users` WHERE  `users`.`email` =`$this->email` &&`users`.`password`=`$this->password`";
-      return  $this->runDQL($query);
+        $query = "UPDATE `users` SET `users`.`status` = $this->status WHERE `users`.`id` = $this->id";
+        // echo $query;die;
+        return $this->runDML($query);
     }
 
+    public function login()
+    {
+        $query = "SELECT `users`.* FROM `users` WHERE `users`.`email` = '$this->email' AND `users`.`password` = '$this->password' ";
+        return $this->runDQL($query);
+    }
+
+    public function updateCode()
+    {
+        $query = "UPDATE `users` SET `users`.`code` = $this->code WHERE `users`.`email` = '$this->email'";
+        return $this->runDML($query);    
+    }
+    public function updatePassword()
+    {
+        $query = "UPDATE `users` SET `users`.`password` = '$this->password' WHERE `users`.`email` = '$this->email' ";
+        $this->runDML($query);
+        $query1 = "SELECT `users`.* FROM `users` WHERE `users`.`email`= '$this->email' ";
+        return $this->runDQL($query1); 
+    }
+
+    public function changePassword()
+    {
+        $query = "UPDATE `users` SET `users`.`password` = '$this->password' WHERE `users`.`id` = $this->id";
+        return $this->runDML($query);
+    }
+
+    public function changeEmail()
+    {
+        $query = "UPDATE `users` SET `users`.`email` = '$this->email', `users`.`status` = $this->status ,
+        `users`.`code` = $this->code  WHERE `users`.`id` = $this->id  ";
+        // echo $query;die;
+        return $this->runDML($query);
+    }
     // insertData
     // deleteData
     // updateData
