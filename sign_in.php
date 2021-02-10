@@ -133,10 +133,11 @@
             if (isset($errors['allRequried'])) {
                echo $errors['allRequried'];
            } ?>
-            <button type="submit" class="btn btn-success ">Login</button>
-            <a class="mx-2" href="sign_up.php">I Don't Have Account</a>
-            <a class="mx-2" href="verify_code.php">Forget Password</a>
-            
+           <button type="submit" class="btn btn-success  ">Login</button>
+           <div class="row">
+              <a class="mx-2 col-6" href="sign_up.php">I Don't Have an Account</a>
+              <a class="mx-2 col-6" href="get_email.php">Forget Password</a>
+           </div>
         </form>
 
        
