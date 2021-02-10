@@ -135,7 +135,7 @@ class user extends connection implements operation {
      VALUES ('$this->first_name','$this->last_name','$this->email',
             '$this->phone','$this->password','$this->gender','$this->code')";
 
-     
+     echo $query;
      
      return  $this->runDML($query);
      
