@@ -1,5 +1,5 @@
 <?php include_once "header.php";
-if(isset($_SESSION['user'])){
+if(isset($_SESSION['user_data'])){
   header('Location:index.php');
 }?>
 
@@ -12,13 +12,25 @@ if(isset($_SESSION['user'])){
     // get email from url sent with header
       if (!empty($_GET)) {
          if (isset($_GET['email'])) {
-             echo 'pppp';
+            
              $email = $_GET['email'];
-         }else{
-             echo'gfgfgf';
-           //  header('Location:404.php');
-            }
-      }
+         }
+
+         // if the user forget password 
+          if(isset($_GET['forget'])){
+            if($_GET['forget'] == 1){
+                $forget = true;
+               
+            } 
+          }else{
+              $forget = false;
+          }
+         
+         
+      }else{
+             
+        header('Location:404.php');
+       }
       
     ?>
     <div class="row col-10 mb-3">
@@ -33,7 +45,7 @@ if(isset($_SESSION['user'])){
      include_once 'user.php';
      $validate =new validation();
      $errors=[];
-     if (isset($email)) { 
+     if (!empty($_GET['email']) && !empty($_GET['forget'])) { 
       
        // check that the email at it's correct form
         $validate->setEmail($email);
@@ -41,12 +53,14 @@ if(isset($_SESSION['user'])){
 
         if (empty($emailValidation)) {
           //done
+          
           // chech if there is a user with  this email
            $user = new user();
            $user->setEmail($email);
            $result = $user->checkEmail();
            if (!empty($result)) {
             // done
+           
                $user_data = $result->fetch_object();
               
            }else{
@@ -60,11 +74,9 @@ if(isset($_SESSION['user'])){
         }
 
        }
-
-       if (!empty($_POST))  {
-          
-           echo $_POST['code'];
-          echo $user_data->code;
+    
+       if (!empty($_POST['code'])  &&  empty($emailValidation) && !empty($result) && !$forget)  {
+          echo 'a7a';
            //if the inserted code is equal to the user code
            if ($user_data->code == $_POST['code']) {
             //Set User to Verified
@@ -84,15 +96,20 @@ if(isset($_SESSION['user'])){
             </div>';
             echo $errors['something'];
            }
-           }else {
-            $errors['wrong_code']='
-            <div class="alert alert-danger col-10 mx-auto">
-              Wrong Code 
-            </div>';
-            echo $errors['wrong_code'];
-           }
+        }else {
+        $errors['wrong_code']='
+        <div class="alert alert-danger col-10 mx-auto">
+          Wrong Code 
+        </div>';
+        echo $errors['wrong_code'];
+        }
            
-       }else{echo 'dsfsdfsdf';}
+       }elseif(!empty($_POST['code'])  && empty($errors) && empty($emailValidation) && !empty($user_data) && $forget){
+        if ($user_data->code == $_POST['code']){
+          $_SESSION['email']=$user_data->email;
+          header('Location:change_password.php');
+        }   
+       }
     ?>
      
     <button type="submit" class="btn btn-success ">Verify</button>

@@ -2,14 +2,19 @@
       include_once "header.php";
       include_once "user.php";
       include_once "validation.php";
+      if(isset($_SESSION['user_data'])){
+        header('Location:index.php');
+      
+      
+    } 
     // Import PHPMailer classes into the global namespace
-  // These must be at the top of your script, not inside a function
-  use PHPMailer\PHPMailer\PHPMailer;
-  use PHPMailer\PHPMailer\SMTP;
-  use PHPMailer\PHPMailer\Exception;
+    // These must be at the top of your script, not inside a function
+    use PHPMailer\PHPMailer\PHPMailer;
+    use PHPMailer\PHPMailer\SMTP;
+    use PHPMailer\PHPMailer\Exception;
 
-  // Load Composer's autoloader
-  require 'vendor/autoload.php';
+    // Load Composer's autoloader
+    require 'vendor/autoload.php';
       $errors=[];
       if (!empty($_POST)) {
        
@@ -27,7 +32,7 @@
             $user = new user();
             $user->setEmail($_POST['email']);
             $user->setPassword($_POST['password']);
-            $logged = $user->userLogin();
+            $logged = $user->login();
            
             if (!empty($logged)) {
                //the user existes 

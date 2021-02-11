@@ -1,4 +1,9 @@
 <?php include_once "header.php";
+if(isset($_SESSION['user_data'])){
+    header('Location:index.php');
+  
+  
+}  
   // Import PHPMailer classes into the global namespace
 // These must be at the top of your script, not inside a function
 use PHPMailer\PHPMailer\PHPMailer;
@@ -39,8 +44,6 @@ require 'vendor/autoload.php';
 
 
             //password validation
-           
-            
             $validate->setPassword($password);
             $validate->setConfirmPassword($con_password);
             $errors['password_confirm'] = $validate->passwordValidation();

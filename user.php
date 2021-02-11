@@ -126,20 +126,15 @@ class user extends connection implements operation {
         $this->updated_at = $updatedAt;
     }
 
-
     public function insertData()
- {
-    $query=" INSERT INTO
-     `users`( `users`.`first_name`, `users`.`last_name`, `users`.`email`,
-              `users`.`phone`, `users`.`password`,   `users`.`gender`,  `users`.`code`)
-     VALUES ('$this->first_name','$this->last_name','$this->email',
-            '$this->phone','$this->password','$this->gender','$this->code')";
-
-     echo $query;
-     
-     return  $this->runDML($query);
-     
- }
+    {
+        $query = "INSERT INTO `users` (`users`.`first_name`,`users`.`last_name`,`users`.`phone`,`users`.`email`,`users`.`gender`,
+        `users`.`password`,`users`.`code`) VALUES ('$this->first_name','$this->last_name','$this->phone','$this->email',
+        '$this->gender','$this->password','$this->code') ";
+        // echo $query;
+        return  $this->runDML($query);
+        
+    }
 
     public function selectAllData(){
 
@@ -172,7 +167,7 @@ class user extends connection implements operation {
         return $this->runDML($query);
     }
 
-    public function userLogin()
+    public function login()
     {
         $query = "SELECT `users`.* FROM `users` WHERE `users`.`email` = '$this->email' AND `users`.`password` = '$this->password' ";
         return $this->runDQL($query);
@@ -204,6 +199,8 @@ class user extends connection implements operation {
         // echo $query;die;
         return $this->runDML($query);
     }
+
+    
     // insertData
     // deleteData
     // updateData
