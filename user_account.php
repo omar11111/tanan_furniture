@@ -1,12 +1,24 @@
 <?php
-
+ 
  include_once 'header.php';
  include_once 'validation.php';
  include_once 'user.php';
    
+ $errors = [];
+ $success = [];
+ $emailValidation=[];
+ $showPasswod =false;
+ $active_info=false;
+ $showEmail=false;
 
-    
+ use PHPMailer\PHPMailer\PHPMailer;
+ use PHPMailer\PHPMailer\SMTP;
+ use PHPMailer\PHPMailer\Exception;
 
+
+ // Load Composer's autoloader
+ require 'vendor/autoload.php';
+ 
 // update basic info
 if (isset($_POST['update_info'])) {
 
@@ -21,7 +33,7 @@ if (isset($_POST['update_info'])) {
       $phone = $_POST['phone'];
       $gender = $_POST['gender'];
 
-
+     
     
 
       $updateData = new user();
@@ -39,14 +51,14 @@ if (isset($_POST['update_info'])) {
 
           if ($_FILES['photo']['size'] > 1000000) {
               $errors['size'] = "<div class='alert alert-danger'> You must upload image less than 1 mega </div>";
-              $show = "show";
+              $active_info = "show active";
              
           }
 
           $extArrays = ['png', 'jpg', 'jpeg'];
           if (!in_array($extention, $extArrays)) {
               $errors['ext'] = "<div class='alert alert-danger'> You must upload image With extensions png, jpg, jpeg only </div>";
-              $show = "show";
+              $active_info = "show active";
           }
 
           if (empty($errors)) {
@@ -59,7 +71,7 @@ if (isset($_POST['update_info'])) {
           $result = $updateData->updateData();
           if ($result) {
               $success['updateInfo'] = '<div class="alert alert-success" >  Information Has been Updated </div>';
-            
+              $active_info = "show active";
               
               $_SESSION['user_data']->first_name = $first;
               $_SESSION['user_data']->last_name = $last;
@@ -67,33 +79,171 @@ if (isset($_POST['update_info'])) {
               $_SESSION['user_data']->phone = $phone;
           } else {
               $errors['something'] = "<div class='alert alert-danger'> SomeThing Went Wrong </div>";
-              $show = "show";
+              $active_info = "show active";
               echo $errors['something'];
           }
       }
   } else {
       $errors['allFields'] = "<div class='alert alert-danger'> You must Enter all fields </div>";
-      $show = "show";
+      $active_info = "show active";
       echo $errors['allFields'];
   }
 }
-    
+
+
+//change password
+// change password
+if (isset($_POST['change-password'])) {
+  if (
+      isset($_POST['old_password']) && $_POST['old_password']
+      &&  isset($_POST['password']) && $_POST['password']
+      &&  isset($_POST['confirm_password']) && $_POST['confirm_password']
+  ) {
+      $passwordData = new user();
+      $passwordData->setPassword($_POST['old_password']);
+      if (!($_SESSION['user']->password == $passwordData->getPassword())) {
+          $erros['oldPass'] = "<div class=' alert alert-danger'> Wrong Password </div>";
+          $showPasswod = "show active";
+          $active_info='';
+      }
+      $passwordData->setPassword($_POST['password']);
+      if ($_SESSION['user']->password == $passwordData->getPassword()) {
+          $erros['enterNew'] = "<div class=' alert alert-danger'> You must enter New password </div>";
+          $showPasswod = "show active";
+          $active_info='';
+      }
+
+      $validate = new validation();
+      $validate->setPassword($_POST['password']);
+      $validate->setConfirmPassword($_POST['confirm_password']);
+      $passwordValidation = $validate->passwordValidation();
+
+      if (!empty($passwordValidation)) {
+          $showPasswod = "show active";
+          $active_info='';
+      }
+      if (empty($passwordValidation) && empty($errors)) {
+          $passwordData->setId($_SESSION['user']->id);
+          $result = $passwordData->changePassword();
+          if ($result) {
+              $_SESSION['user']->password = $passwordData->getPassword();
+              $success['updateInfo'] = '<div class="alert alert-success" >  Password Has been Updated </div>';
+              $showPasswod = "show active";
+              $active_info='';
+          } else {
+              $errors['something'] = "<div class='alert alert-danger'> SomeThing Went Wrong </div>";
+              $showPasswod = "show active";
+              $active_info='';
+          }
+      }
+  } else {
+
+      $errors['allFields'] = "<div class='alert alert-danger'> You must Enter all fields </div>";
+      $showPasswod = "show active";
+      $active_info='';
+
+  }
+}
+
+
+
+   // change email
+   if (isset($_POST['change_email'])) {
+    if ($_POST['email']) {
+        // do logic
+       
+        if ($_SESSION['user_data']->email == $_POST['email']) {
+            $sameEmail = "<div class='alert alert-danger'> Your email dosen't changed </div>";
+            $showEmail = "show active";
+        } else {
+            // validate on email
+           
+            $validate = new validation();
+            $validate->setEmail($_POST['email']);
+            $emailValidation= $validate->validateEmail();
+
+            if (!empty($emailValidation )) {
+                $showEmail = "show active";
+               
+            }
+
+            if (empty($emailValidation )) {
+                // update email in db 
+               
+                $code = rand(10000, 99999);
+                $emailUser = new user();
+                $emailUser->setEmail($_POST['email']);
+                $emailUser->setId($_SESSION['user_data']->id);
+                $emailUser->setStatus(2);
+                $emailUser->setCode($code);
+                $result = $emailUser->changeEmail();
+                if ($result) {
+                  echo 'ddd';
+                    $_SESSION['user']->email = $_POST['email'];
+                    // $success['email'] = "<div class='alert alert-success'> You Email Has been Updated </div>";
+
+                    // send code via email
+                    $mail = new PHPMailer(true);
+                    try {
+                        //Server settings
+                        // $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      // Enable verbose debug output
+                        $mail->isSMTP();                                            // Send using SMTP
+                        $mail->Host       = 'smtp.gmail.com';                    // Set the SMTP server to send through
+                        $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
+                        $mail->Username   = 'ntitasks@gmail.com';                     // SMTP username
+                        $mail->Password   = 'NTI@123456';                               // SMTP password
+                        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
+                        $mail->Port       = 587;                                    // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
+
+                        //Recipients
+                        $mail->setFrom('ntitasks@gmail.com', 'Verfication Code');
+                        $mail->addAddress($emailUser->getEmail());     // Add a recipient
+
+
+                        // Content
+                        $mail->isHTML(true);                                  // Set email format to HTML
+                        $mail->Subject = 'Verfiy';
+                        $mail->Body    = 'Your Verification Code is:<b>' . $code . '</b>';
+
+                        $mail->send();
+                        // echo 'Message has been sent';
+                        header('Location:verify_code.php?email=' . $_POST['email']);
+                    } catch (Exception $e) {
+                        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+                    }
+
+                    $showEmail = "show active";
+                } else {
+                    $something = "<div class='alert alert-danger'> Email Already Exists </div>";
+                    $showEmail = "show active ";
+                }
+            }
+        }
+    } else {
+        $errors['allFields'] = "<div class='alert alert-danger'> You must Enter all fields </div>";
+        $showEmail = "show active";
+    }
+}
+       
 ?>
 
 <div class="">
-  <h1 class="about-seconed-title text-center col-3 mx-auto  my-5">Edit Profile</h1>
+  <h1 class=" text-center col-3 mx-auto  my-5" style="color: #b8802c;">Edit Profile</h1>
   <div class="row edit-form">
 
     <div class="col-8 mx-auto  ">
       <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+      <!-- update basic info -->
+        <div class="tab-pane fade   <?php if($active_info){echo $active_info;}?>" id="list-home" role="tabpanel"
+          aria-labelledby="list-home-list">
           <!-- form information edit information -->
           <form action="" method="post" enctype="multipart/form-data" class=" mx-5">
-          <?phpecho $success['updateInfo'] ;?>  
-          <div class="offset-4 col-4">
-              <img src="images/users/<?php echo $_SESSION['user_data']->photo ?>" alt="" class="rounded" style="width:100%">
+            <?phpecho $success['updateInfo'] ;?>
+            <div class="offset-4 col-4">
+              <img src="images/users/<?php echo $_SESSION['user_data']->photo ?>" alt="" class="rounded"
+                style="width:100%">
               <input type="file" name="photo" id="" class="form-control">
-          </div>
+            </div>
 
             <div class="row mb-3 mx-auto">
               <label for="inputEmail3" class="col-sm-6 ms-4 col-form-label " style="color: #b8802c;font-size:25px">Frist
@@ -140,10 +290,105 @@ if (isset($_POST['update_info'])) {
 
           </form>
         </div>
-        <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
-          2</div>
-        <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">
-          3</div>
+
+      <!-- update password -->
+        <div class="tab-pane fade <?php if($showPasswod) { echo $showPasswod;} ?>" id="list-profile" role="tabpanel"
+          aria-labelledby="list-profile-list">
+          <form class="col-12  mx-auto  " method="POST">
+
+            <div class=" mb-3">
+              <h1 class="col-6 col-md-6 mx-auto">Change Password</h1>
+            </div>
+
+            <div class="row  mb-3 mx-auto">
+              <label for="inputEmail3" class="col-sm-6 ms-4 col-form-label " style="color: #b8802c; font-size:25px">
+                Old Password
+              </label>
+              <div class="col-sm-8 mx-auto">
+                <input type="password" class="form-control" id="inputEmail3" name="old_password" value="">
+              </div>
+            </div>
+
+            <div class="row  mb-3 mx-auto">
+              <label for="inputEmail3" class="col-sm-6 ms-4 col-form-label " style="color: #b8802c; font-size:25px">
+                New Password
+              </label>
+              <div class="col-sm-8 mx-auto">
+                <input type="password" class="form-control" id="inputEmail3" name="password" value="">
+              </div>
+            </div>
+
+
+            <div class="row  mb-3 mx-auto">
+              <label for="inputEmail3" class="col-sm-6 ms-4 col-form-label " style="color: #b8802c; font-size:25px">
+                Confirm Password
+              </label>
+              <div class="col-sm-8 mx-auto">
+                <input type="password" class="form-control" id="inputEmail3" name="confirm_password" value="">
+              </div>
+            </div>
+
+            <div class="col-10 mx-auto">
+              <?php
+                if (!empty($passwordValidation)) {
+                    foreach ($passwordValidation as $key => $value) {
+                        echo $value;
+                    }
+                }
+                if (!empty($errors)) {
+                    foreach ($errors as $key => $value) {
+                        echo $value;
+                    }
+                }
+            ?>
+            </div>
+
+
+
+            <button class="btn update-button ms-5 py-2 px-5 " type="submit" name="change-password">Update</button>
+
+
+          </form>
+        </div>
+
+      <!-- update email -->
+        <div class="tab-pane fade <?php if($showEmail) { echo $showEmail;}?>" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">
+          <form action="" method="post">
+             
+
+              <div class="row  mb-3 mx-auto">
+                <label for="inputEmail3" class="col-sm-6 ms-4 col-form-label "
+                  style="color: #b8802c;font-size:25px">Your Email</label>
+                <div class="col-sm-8 mx-auto">
+                  <input type="text" class="form-control" id="inputEmail3" name="email"
+                    value="<?php echo $_SESSION['user_data']->email ?>">
+                </div>
+              </div>
+              <?php
+                                
+                                
+                                 if (isset($something)) {
+                                  echo $something;
+                              }
+                              if (isset($sameEmail)) {
+                                  echo $sameEmail;
+                              }
+                                if (isset($success['email'])) {
+                                    echo $success['email'];
+                                }
+              ?>
+            <?php
+             if (!empty($emailValidation)) {
+              foreach ($emailValidation as $ky => $vl) {
+                  echo $vl;
+              }
+          }
+          ?>
+
+            <button class="btn update-button ms-5 py-2 px-5 " type="submit" name="change_email">Change Email</button>
+
+          </form>
+          </div>
         <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">
           4</div>
       </div>
@@ -151,12 +396,18 @@ if (isset($_POST['update_info'])) {
 
     <div class="  col-4 row justify-content-center align-self-center mx-auto ">
       <div class="list-group row align-items-center rounded mx-auto  text-center" id="list-tab" role="tablist">
-        <a class="list-group-item p-3 col-6 list-group-item-action active" id="list-home-list" style=""
-          data-toggle="list" href="#list-home" role="tab" aria-controls="home">Edit information</a>
-        <a class="list-group-item p-3 col-6 list-group-item-action" id="list-profile-list" data-toggle="list"
-          href="#list-profile" role="tab" aria-controls="profile">Profile</a>
-        <a class="list-group-item p-3 col-6 list-group-item-action" id="list-messages-list" data-toggle="list"
-          href="#list-messages" role="tab" aria-controls="messages">Messages</a>
+
+        <a class="list-group-item p-3 col-6 list-group-item-action <?php if($active_info){echo $active_info;}?>"
+          id="list-home-list" style="" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Edit
+          information</a>
+
+        <a class="list-group-item p-3 col-6 list-group-item-action <?php if($showPasswod) { echo $showPasswod;}?>"
+          id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Change
+          Password</a>
+
+        <a class="list-group-item p-3 col-6 list-group-item-action <?php if($showEmail) { echo $showEmail;}?>" id="list-messages-list" data-toggle="list"
+          href="#list-messages" role="tab" aria-controls="messages">Change Email</a>
+
         <a class="list-group-item p-3 col-6 list-group-item-action" id="list-settings-list" data-toggle="list"
           href="#list-settings" role="tab" aria-controls="settings">Settings</a>
       </div>

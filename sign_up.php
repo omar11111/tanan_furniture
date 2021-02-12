@@ -1,6 +1,6 @@
 <?php include_once "header.php";
 if(isset($_SESSION['user_data'])){
-    header('Location:index.php');
+    
   
   
 }  
@@ -127,7 +127,7 @@ require 'vendor/autoload.php';
        
         <form action="" method="POST" class="col-12 col-md-6 mx-auto contact-form ">
            
-            <div class="about-seconed-title">
+            <div class="">
                 <h1 class="col-6 col-md-6 mx-auto">Create An Account</h1>
             </div>
 

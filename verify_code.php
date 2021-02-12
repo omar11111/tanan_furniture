@@ -1,11 +1,12 @@
 <?php include_once "header.php";
-if(isset($_SESSION['user_data'])){
+if(isset($_SESSION['user_data'])&&!$_GET){
   header('Location:index.php');
 }?>
 
+
 <form class="col-12 col-md-6 mx-auto contact-form " method="POST">
     
-    <div class="about-seconed-title">
+    <div class="">
         <h1 class="col-6 col-md-6 mx-auto">Verify code</h1>
     </div>
     <?php
@@ -45,7 +46,7 @@ if(isset($_SESSION['user_data'])){
      include_once 'user.php';
      $validate =new validation();
      $errors=[];
-     if (!empty($_GET['email']) && !empty($_GET['forget'])) { 
+     if (!empty($_GET['email'])) { 
       
        // check that the email at it's correct form
         $validate->setEmail($email);
@@ -53,16 +54,16 @@ if(isset($_SESSION['user_data'])){
 
         if (empty($emailValidation)) {
           //done
-          
+         
           // chech if there is a user with  this email
            $user = new user();
            $user->setEmail($email);
            $result = $user->checkEmail();
            if (!empty($result)) {
             // done
-           
-               $user_data = $result->fetch_object();
               
+               $user_data = $result->fetch_object();
+               
            }else{
                $errors['user_data']='
                <div class="alert alert-danger col-10 mx-auto">
@@ -75,8 +76,8 @@ if(isset($_SESSION['user_data'])){
 
        }
     
-       if (!empty($_POST['code'])  &&  empty($emailValidation) && !empty($result) && !$forget)  {
-          echo 'a7a';
+       if (!empty($_POST['code'])  &&  empty($emailValidation) && !empty($result) && $forget==false)  {
+          
            //if the inserted code is equal to the user code
            if ($user_data->code == $_POST['code']) {
             //Set User to Verified

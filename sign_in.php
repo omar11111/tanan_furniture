@@ -106,8 +106,8 @@
           ?>
         <form class="col-12 col-md-6 mx-auto contact-form " method="POST">
             
-            <div class="about-seconed-title">
-                <h1 class="col-6 col-md-6 mx-auto">Login To Your Account</h1>
+            <div class=" col-7 mx-auto">
+                <h1 class=" col-12 col-md-12">Login To Your Account</h1>
             </div>
             <div class="row col-10 mb-3">
               <label for="inputEmail3" class="col-sm-2 col-form-label ">Email</label>

@@ -6,15 +6,11 @@
 
  // Load Composer's autoloader
  require 'vendor/autoload.php';
-if(isset($_SESSION['user_data'])){
-  header('Location:index.php');
-
-
-}?>
+?>
 
 <form class="col-12 col-md-6 mx-auto contact-form " method="POST">
     
-    <div class="about-seconed-title">
+    <div class="">
         <h1 class="text-center col-10   mb-5">Verify Email </h1>
     </div>
   
