@@ -1,13 +1,14 @@
 <?php
-include_once "database.php";
+include_once "connection.php";
 include_once "operation.php";
-class City extends database implements operation
+class City extends connection implements operation
 {
     private $id;
     private $name;
    
 
-    //getters
+    //gett
+   
     public function getId()
     {
        return $this->id;

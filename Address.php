@@ -1,7 +1,7 @@
 <?php
-include_once "database.php";
+include_once "connection.php";
 include_once "operation.php";
-class Address extends database implements operation
+class Address extends connection implements operation
 {
     private $id;
     private $street;
@@ -139,6 +139,7 @@ class Address extends database implements operation
 
     public function selectAllData(){
         $query = " SELECT `addresses`.* FROM `addresses` WHERE `addresses`.`user_id` = $this->id ";
+       
         return $this->runDQL($query);
     }
     public function deleteData(){

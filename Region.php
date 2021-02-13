@@ -1,7 +1,7 @@
 <?php
-include_once "database.php";
+include_once "connection.php";
 include_once "operation.php";
-class Region extends database implements operation
+class Region extends connection implements operation
 {
     private $id;
     private $name;
@@ -21,7 +21,7 @@ class Region extends database implements operation
        return $this->city_id;
     }
    
-
+    
 
     // setters 
     public function setId($id)

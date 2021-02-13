@@ -224,7 +224,33 @@ if (isset($_POST['change-password'])) {
         $showEmail = "show active";
     }
 }
-       
+     
+
+
+// address cycle
+// show 
+include_once 'Address.php';
+include_once 'City.php';
+include_once 'Region.php';
+$region =new Region();
+$city= new City();
+$address =new Address();
+$address->setId($_SESSION['user_data']->id);
+$query_user_address=$address->selectAllData($_SESSION['user_data']->id);
+if ($query_user_address) {
+  // now i know the adresses that belongs to that user
+   $get_user_address=$query_user_address->fetch_all(MYSQLI_ASSOC);
+   
+  //get cites and but it into the optselector
+   $city_query= $city->selectAllData();
+   if ($city_query) {
+     $city_data = $city_query->fetch_all(MYSQLI_ASSOC);
+     
+   }else{
+     $something['database']= "<div class='alert alert-danger'> Something went Wrong </div>";
+   }
+}else{ $something['database']= "<div class='alert alert-danger'> Something went Wrong </div>";
+}
 ?>
 
 <div class="">
@@ -233,8 +259,9 @@ if (isset($_POST['change-password'])) {
 
     <div class="col-8 mx-auto  ">
       <div class="tab-content" id="nav-tabContent">
-      <!-- update basic info -->
-        <div class="tab-pane fade   <?php if($active_info){echo $active_info;}?>" id="list-home" role="tabpanel"
+
+        <!-- update basic info -->
+        <div class="tab-pane fade show  <?php if($active_info){echo $active_info;}?>" id="list-home" role="tabpanel"
           aria-labelledby="list-home-list">
           <!-- form information edit information -->
           <form action="" method="post" enctype="multipart/form-data" class=" mx-5">
@@ -291,13 +318,13 @@ if (isset($_POST['change-password'])) {
           </form>
         </div>
 
-      <!-- update password -->
+        <!-- update password -->
         <div class="tab-pane fade <?php if($showPasswod) { echo $showPasswod;} ?>" id="list-profile" role="tabpanel"
           aria-labelledby="list-profile-list">
           <form class="col-12  mx-auto  " method="POST">
 
             <div class=" mb-3">
-              <h1 class="col-6 col-md-6 mx-auto">Change Password</h1>
+              <h1 class="col-6 col-md-6 mx-auto" style="color: #b8802c;">Change Password</h1>
             </div>
 
             <div class="row  mb-3 mx-auto">
@@ -351,20 +378,21 @@ if (isset($_POST['change-password'])) {
           </form>
         </div>
 
-      <!-- update email -->
-        <div class="tab-pane fade <?php if($showEmail) { echo $showEmail;}?>" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">
+        <!-- update email -->
+        <div class="tab-pane fade <?php if($showEmail) { echo $showEmail;}?>" id="list-messages" role="tabpanel"
+          aria-labelledby="list-messages-list">
           <form action="" method="post">
-             
 
-              <div class="row  mb-3 mx-auto">
-                <label for="inputEmail3" class="col-sm-6 ms-4 col-form-label "
-                  style="color: #b8802c;font-size:25px">Your Email</label>
-                <div class="col-sm-8 mx-auto">
-                  <input type="text" class="form-control" id="inputEmail3" name="email"
-                    value="<?php echo $_SESSION['user_data']->email ?>">
-                </div>
+
+            <div class="row  mb-3 mx-auto">
+              <label for="inputEmail3" class="col-sm-6 ms-4 col-form-label " style="color: #b8802c;font-size:25px">Your
+                Email</label>
+              <div class="col-sm-8 mx-auto">
+                <input type="text" class="form-control" id="inputEmail3" name="email"
+                  value="<?php echo $_SESSION['user_data']->email ?>">
               </div>
-              <?php
+            </div>
+            <?php
                                 
                                 
                                  if (isset($something)) {
@@ -388,15 +416,125 @@ if (isset($_POST['change-password'])) {
             <button class="btn update-button ms-5 py-2 px-5 " type="submit" name="change_email">Change Email</button>
 
           </form>
-          </div>
+        </div>
+
+        <!-- update address -->
         <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">
-          4</div>
+          <form action="" method="post">
+          <!-- Add New Address -->
+          <div class="row  mb-3 mx-auto">
+            <label for="inputEmail3" class="col-sm-6 ms-4 col-form-label "
+              style="color: #b8802c;font-size:25px">Street</label>
+            <div class="col-sm-8 mx-auto">
+              <input type="text" class="form-control" id="inputEmail3" name="street" value="">
+            </div>
+          </div>
+
+          <div class="row  mb-3 mx-auto">
+            <label for="inputEmail3" class="col-sm-6 ms-4 col-form-label "
+              style="color: #b8802c;font-size:25px">Building</label>
+            <div class="col-sm-8 mx-auto">
+              <input type="number" class="form-control" id="inputEmail3" name="building"
+                value="<?php //echo $_SESSION['user_data']->email ?>">
+            </div>
+          </div>
+
+          <div class="row  mb-3 mx-auto">
+            <label for="inputEmail3" class="col-sm-6 ms-4 col-form-label "
+              style="color: #b8802c;font-size:25px">Level</label>
+            <div class="col-sm-8 mx-auto">
+              <input type="text" class="form-control" id="inputEmail3" name="level"
+                value="<?php //echo $_SESSION['user_data']->email ?>">
+            </div>
+          </div>
+
+          <div class="row  mb-3 mx-auto">
+            <label for="inputEmail3" class="col-sm-6 ms-4 col-form-label "
+              style="color: #b8802c;font-size:25px">Flat</label>
+            <div class="col-sm-8 mx-auto">
+              <input type="text" class="form-control" id="inputEmail3" name="flat"
+                value="<?php //echo $_SESSION['user_data']->email ?>">
+            </div>
+          </div>
+
+          <div class="row  mb-3 mx-auto">
+            <div class="col-sm-8 mx-auto">
+              <textarea class="form-control" name="notes" id="" cols="30" rows="5" style="font-weight: bolder;">Notes</textarea>
+            </div>
+          </div>
+
+          <div class="row  mb-3 mx-auto">
+
+            <div class="col-sm-8 mx-auto">
+
+              <select name="gender" id="" class="form-control" style="font-weight: bolder;">
+                <option
+                  <?php echo ((isset($_SESSION['user_data']->gender) &&  $_SESSION['user_data']->gender  == 'Male') ? 'selected' : '') ?>
+                  value="Male">Home</option>
+                <option
+                  <?php if(isset($_SESSION['user_data']->gender) &&  $_SESSION['user_data']->gender == 'Female') {echo "selected";} ?>
+                  value="Female">Work</option>
+              </select>
+
+            </div>
+          </div>
+
+          <div class="row  mb-3 mx-auto">
+            <div class="col-sm-8 mx-auto">
+
+              <select class="form-control" name="cars" id="cars" style="font-weight: bolder;">
+                
+                <?php
+                 
+                
+                foreach ($city_data as $key => $value) {
+                   $region->setCityId($value['id']);
+                  $query_region=$region->selectAllData();
+                  if ($query_region) {
+                    
+                    $get_regions =$query_region->fetch_all(MYSQLI_ASSOC);
+                    
+                  }else{
+       
+                  $noRegions = "<div class='alert alert-danger'> There is no Regions </div>";
+                  echo $noRegions;
+                } ?>   
+                <?php 
+                   
+                  
+                ?>
+               
+               <optgroup label="<?php echo $value['name'] ?>">
+              <?php  foreach ($get_regions as $key1 => $value1) {
+              ?>
+                    
+                  <option value="<?php echo $value1['id']?>"><?php echo $value1['name']?></option>
+                  <?php } ?>
+                 
+                </optgroup>
+
+                <?php }?>
+                
+              </select>
+
+            </div>
+          </div>
+
+
+          <!-- end add new address -->
+          <button class="btn update-button ms-5 py-2 px-5 " type="submit" name="editAddress">Add New Address</button>
+
+
+
+
+
+        </div>
       </div>
     </div>
 
     <div class="  col-4 row justify-content-center align-self-center mx-auto ">
       <div class="list-group row align-items-center rounded mx-auto  text-center" id="list-tab" role="tablist">
-
+        
         <a class="list-group-item p-3 col-6 list-group-item-action <?php if($active_info){echo $active_info;}?>"
           id="list-home-list" style="" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Edit
           information</a>
@@ -405,8 +543,9 @@ if (isset($_POST['change-password'])) {
           id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Change
           Password</a>
 
-        <a class="list-group-item p-3 col-6 list-group-item-action <?php if($showEmail) { echo $showEmail;}?>" id="list-messages-list" data-toggle="list"
-          href="#list-messages" role="tab" aria-controls="messages">Change Email</a>
+        <a class="list-group-item p-3 col-6 list-group-item-action <?php if($showEmail) { echo $showEmail;}?>"
+          id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Change
+          Email</a>
 
         <a class="list-group-item p-3 col-6 list-group-item-action" id="list-settings-list" data-toggle="list"
           href="#list-settings" role="tab" aria-controls="settings">Settings</a>
