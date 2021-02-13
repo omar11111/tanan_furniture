@@ -571,6 +571,10 @@ footer a:hover{
     color: #b8802c;
 }
 
+.update-button:hover{ 
+    background-color: #1b1a15b6;
+    color: #b8802c;
+}
 .edit-form{
   min-height: 500px;
   overflow: hidden;

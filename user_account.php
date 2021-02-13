@@ -10,6 +10,7 @@
  $showPasswod =false;
  $active_info=false;
  $showEmail=false;
+ $showAddress=false;
 
  use PHPMailer\PHPMailer\PHPMailer;
  use PHPMailer\PHPMailer\SMTP;
@@ -228,7 +229,7 @@ if (isset($_POST['change-password'])) {
 
 
 // address cycle
-// show 
+// show avilabel adresses at optselect
 include_once 'Address.php';
 include_once 'City.php';
 include_once 'Region.php';
@@ -251,11 +252,63 @@ if ($query_user_address) {
    }
 }else{ $something['database']= "<div class='alert alert-danger'> Something went Wrong </div>";
 }
+
+
+// add address
+
+if (isset($_POST['addAddress'])) {
+  $showAddress = 'show Active';
+
+  $addAddress = new Address();
+  $addAddress->setUserId($_SESSION['user']->id);
+  $addAddress->setStreet($_POST['street']);
+  $addAddress->setFlat($_POST['flat']);
+  $addAddress->setFloor($_POST['floor']);
+  $addAddress->setBuilding($_POST['building']);
+  $addAddress->setNotes($_POST['notes']);
+  $addAddress->setType($_POST['type']);
+  $addAddress->setRegionId($_POST['region_id']);
+  $result5 = $addAddress->insertData();
+  if ($result5) {
+    
+    $success['AddAddress'] =  "<div class='alert alert-success'> You have been added a new address successfully </div>";
+    $showAddress = 'show Active';
+
+  } else {
+     
+      $errors['someThing'] = "<div class='alert alert-danger'> Some thing went wrong </div>";
+      $showAddress = 'show Active';
+
+    }
+}else {
+  
+}
 ?>
 
 <div class="">
   <h1 class=" text-center col-3 mx-auto  my-5" style="color: #b8802c;">Edit Profile</h1>
   <div class="row edit-form">
+
+    <div class="  col-12 col-md-8 my-5 row justify-content-center align-self-center mx-auto ">
+      <div class="list-group row align-items-center rounded mx-auto  text-center" id="list-tab" role="tablist">
+
+        <a class="list-group-item p-3 col-12 col-md-6 list-group-item-action <?php if($active_info){echo $active_info;}?>"
+          id="list-home-list" style="" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Edit
+          information</a>
+
+        <a class="list-group-item p-3 col-12 col-md-6 list-group-item-action <?php if($showPasswod) { echo $showPasswod;}?>"
+          id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Change
+          Password</a>
+
+        <a class="list-group-item p-3 col-12 col-md-6 list-group-item-action <?php if($showEmail) { echo $showEmail;}?>"
+          id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Change
+          Email</a>
+
+        <a class="list-group-item p-3 col-12 col-md-6 list-group-item-action  <?php if($showAddress ) { echo 'active';}?>"
+          id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Edit
+          Address</a>
+      </div>
+    </div>
 
     <div class="col-8 mx-auto  ">
       <div class="tab-content" id="nav-tabContent">
@@ -266,7 +319,7 @@ if ($query_user_address) {
           <!-- form information edit information -->
           <form action="" method="post" enctype="multipart/form-data" class=" mx-5">
             <?phpecho $success['updateInfo'] ;?>
-            <div class="offset-4 col-4">
+            <div class="offset-4 col-6 col-md-4">
               <img src="images/users/<?php echo $_SESSION['user_data']->photo ?>" alt="" class="rounded"
                 style="width:100%">
               <input type="file" name="photo" id="" class="form-control">
@@ -275,7 +328,7 @@ if ($query_user_address) {
             <div class="row mb-3 mx-auto">
               <label for="inputEmail3" class="col-sm-6 ms-4 col-form-label " style="color: #b8802c;font-size:25px">Frist
                 Name</label>
-              <div class="col-sm-8 mx-auto">
+              <div class="col-sm-12  col-md-8 mx-auto">
                 <input type="text" class="form-control" id="inputEmail3" name="frist_name"
                   value="<?php echo $_SESSION['user_data']->first_name ?>">
               </div>
@@ -284,7 +337,7 @@ if ($query_user_address) {
             <div class="row  mb-3 mx-auto">
               <label for="inputEmail3" class="col-sm-6 ms-4 col-form-label " style="color: #b8802c; font-size:25px">Last
                 Name</label>
-              <div class="col-sm-8 mx-auto">
+              <div class="col-sm-12  col-md-8 mx-auto">
                 <input type="text" class="form-control" id="inputEmail3" name="last_name"
                   value="<?php echo $_SESSION['user_data']->last_name  ?>">
               </div>
@@ -293,7 +346,7 @@ if ($query_user_address) {
             <div class="row  mb-3 mx-auto">
               <label for="inputEmail3" class="col-sm-6 ms-4 col-form-label "
                 style="color: #b8802c;font-size:25px">Phone</label>
-              <div class="col-sm-8 mx-auto">
+              <div class="col-sm-12  col-md-8 mx-auto">
                 <input type="text" class="form-control" id="inputEmail3" name="phone"
                   value="<?php echo $_SESSION['user_data']->phone ?>">
               </div>
@@ -302,7 +355,7 @@ if ($query_user_address) {
             <div class="row  mb-3 mx-auto">
               <label for="inputEmail3" class="col-sm-6 ms-4 col-form-label "
                 style="color: #b8802c; font-size:25px">Select Gender</label>
-              <div class="col-sm-8 mx-auto">
+              <div class="col-sm-12  col-md-8 mx-auto">
                 <select name="gender" id="" class="form-control" style="color: #b8802c;">
                   <option
                     <?php echo ((isset($_SESSION['user_data']->gender) &&  $_SESSION['user_data']->gender  == 'Male') ? 'selected' : '') ?>
@@ -419,72 +472,89 @@ if ($query_user_address) {
         </div>
 
         <!-- update address -->
-        <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">
+        <div class="tab-pane fade <?php if($showAddress) { echo ' active';}?>" id="list-settings"
+          role="tabpanel" aria-labelledby="list-settings-list">
           <form action="" method="post">
-          <!-- Add New Address -->
-          <div class="row  mb-3 mx-auto">
-            <label for="inputEmail3" class="col-sm-6 ms-4 col-form-label "
-              style="color: #b8802c;font-size:25px">Street</label>
-            <div class="col-sm-8 mx-auto">
-              <input type="text" class="form-control" id="inputEmail3" name="street" value="">
+            <!-- Add New Address -->
+            <?php
+
+           if (isset($errors['someThing'])) {
+              echo $errors['someThing'];
+            } 
+
+          ?>
+            <?php
+
+           if (isset($success['AddAddress'])) {
+              echo $success['AddAddress'];
+            }
+
+          ?>
+
+            <div class="row  mb-3 mx-auto">
+              <label for="inputEmail3" class="col-sm-6 ms-4 col-form-label "
+                style="color: #b8802c;font-size:25px">Street</label>
+              <div class="col-sm-8 mx-auto">
+                <input type="text" class="form-control" id="inputEmail3" name="street" value="">
+              </div>
             </div>
-          </div>
 
-          <div class="row  mb-3 mx-auto">
-            <label for="inputEmail3" class="col-sm-6 ms-4 col-form-label "
-              style="color: #b8802c;font-size:25px">Building</label>
-            <div class="col-sm-8 mx-auto">
-              <input type="number" class="form-control" id="inputEmail3" name="building"
-                value="<?php //echo $_SESSION['user_data']->email ?>">
+            <div class="row  mb-3 mx-auto">
+              <label for="inputEmail3" class="col-sm-6 ms-4 col-form-label "
+                style="color: #b8802c;font-size:25px">Building</label>
+              <div class="col-sm-8 mx-auto">
+                <input type="number" class="form-control" id="inputEmail3" name="building"
+                  value="<?php //echo $_SESSION['user_data']->email ?>">
+              </div>
             </div>
-          </div>
 
-          <div class="row  mb-3 mx-auto">
-            <label for="inputEmail3" class="col-sm-6 ms-4 col-form-label "
-              style="color: #b8802c;font-size:25px">Level</label>
-            <div class="col-sm-8 mx-auto">
-              <input type="text" class="form-control" id="inputEmail3" name="level"
-                value="<?php //echo $_SESSION['user_data']->email ?>">
+            <div class="row  mb-3 mx-auto">
+              <label for="inputEmail3" class="col-sm-6 ms-4 col-form-label "
+                style="color: #b8802c;font-size:25px">Level</label>
+              <div class="col-sm-8 mx-auto">
+                <input type="text" class="form-control" id="inputEmail3" name="floor"
+                  value="<?php //echo $_SESSION['user_data']->email ?>">
+              </div>
             </div>
-          </div>
 
-          <div class="row  mb-3 mx-auto">
-            <label for="inputEmail3" class="col-sm-6 ms-4 col-form-label "
-              style="color: #b8802c;font-size:25px">Flat</label>
-            <div class="col-sm-8 mx-auto">
-              <input type="text" class="form-control" id="inputEmail3" name="flat"
-                value="<?php //echo $_SESSION['user_data']->email ?>">
+            <div class="row  mb-3 mx-auto">
+              <label for="inputEmail3" class="col-sm-6 ms-4 col-form-label "
+                style="color: #b8802c;font-size:25px">Flat</label>
+              <div class="col-sm-8 mx-auto">
+                <input type="text" class="form-control" id="inputEmail3" name="flat"
+                  value="<?php //echo $_SESSION['user_data']->email ?>">
+              </div>
             </div>
-          </div>
 
-          <div class="row  mb-3 mx-auto">
-            <div class="col-sm-8 mx-auto">
-              <textarea class="form-control" name="notes" id="" cols="30" rows="5" style="font-weight: bolder;">Notes</textarea>
+            <div class="row  mb-3 mx-auto">
+              <div class="col-sm-8 mx-auto">
+                <textarea class="form-control" name="notes" id="" cols="30" rows="5"
+                  style="font-weight: bolder;">Notes</textarea>
+              </div>
             </div>
-          </div>
 
-          <div class="row  mb-3 mx-auto">
+            <div class="row  mb-3 mx-auto">
 
-            <div class="col-sm-8 mx-auto">
+              <div class="col-sm-8 mx-auto">
 
-              <select name="gender" id="" class="form-control" style="font-weight: bolder;">
-                <option
-                  <?php echo ((isset($_SESSION['user_data']->gender) &&  $_SESSION['user_data']->gender  == 'Male') ? 'selected' : '') ?>
-                  value="Male">Home</option>
-                <option
-                  <?php if(isset($_SESSION['user_data']->gender) &&  $_SESSION['user_data']->gender == 'Female') {echo "selected";} ?>
-                  value="Female">Work</option>
-              </select>
+                <select name="type" id="" class="form-control" style="font-weight: bolder;">
+                  <option
+                    <?php echo ((isset($_SESSION['user_data']->gender) &&  $_SESSION['user_data']->gender  == 'Male') ? 'selected' : '') ?>
+                    value="Male">Home</option>
+                  <option
+                    <?php if(isset($_SESSION['user_data']->gender) &&  $_SESSION['user_data']->gender == 'Female') {echo "selected";} ?>
+                    value="Female">Work</option>
+                </select>
 
+              </div>
             </div>
-          </div>
 
-          <div class="row  mb-3 mx-auto">
-            <div class="col-sm-8 mx-auto">
+            <div class="row  mb-3 mx-auto">
+              <div class="col-sm-8 mx-auto">
 
-              <select class="form-control" name="cars" id="cars" style="font-weight: bolder;">
-                
-                <?php
+                <select class="form-control" name="region_id" style="font-weight: bolder;">
+
+                  <?php
                  
                 
                 foreach ($city_data as $key => $value) {
@@ -498,32 +568,29 @@ if ($query_user_address) {
        
                   $noRegions = "<div class='alert alert-danger'> There is no Regions </div>";
                   echo $noRegions;
-                } ?>   
-                <?php 
-                   
-                  
-                ?>
-               
-               <optgroup label="<?php echo $value['name'] ?>">
-              <?php  foreach ($get_regions as $key1 => $value1) {
+                } ?>
+
+
+                  <optgroup label="<?php echo $value['name'] ?>">
+                    <?php  foreach ($get_regions as $key1 => $value1) {
               ?>
-                    
-                  <option value="<?php echo $value1['id']?>"><?php echo $value1['name']?></option>
-                  <?php } ?>
-                 
-                </optgroup>
 
-                <?php }?>
-                
-              </select>
+                    <option value="<?php echo $value1['id']?>"><?php echo $value1['name']?></option>
+                    <?php } ?>
 
+                  </optgroup>
+
+                  <?php }?>
+
+                </select>
+
+              </div>
             </div>
-          </div>
 
 
-          <!-- end add new address -->
-          <button class="btn update-button ms-5 py-2 px-5 " type="submit" name="editAddress">Add New Address</button>
-
+            <!-- end add new address -->
+            <button class="btn update-button ms-5 py-2 px-5 " type="submit" name="addAddress">Add New Address</button>
+            </form>
 
 
 
@@ -532,25 +599,7 @@ if ($query_user_address) {
       </div>
     </div>
 
-    <div class="  col-4 row justify-content-center align-self-center mx-auto ">
-      <div class="list-group row align-items-center rounded mx-auto  text-center" id="list-tab" role="tablist">
-        
-        <a class="list-group-item p-3 col-6 list-group-item-action <?php if($active_info){echo $active_info;}?>"
-          id="list-home-list" style="" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Edit
-          information</a>
 
-        <a class="list-group-item p-3 col-6 list-group-item-action <?php if($showPasswod) { echo $showPasswod;}?>"
-          id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Change
-          Password</a>
-
-        <a class="list-group-item p-3 col-6 list-group-item-action <?php if($showEmail) { echo $showEmail;}?>"
-          id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Change
-          Email</a>
-
-        <a class="list-group-item p-3 col-6 list-group-item-action" id="list-settings-list" data-toggle="list"
-          href="#list-settings" role="tab" aria-controls="settings">Settings</a>
-      </div>
-    </div>
   </div>
 
 
