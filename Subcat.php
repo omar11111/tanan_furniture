@@ -6,7 +6,7 @@ class Subcat extends connection implements operation
     private $id;
     private $name_en;
     private $category_id;
-
+ 
     //getters
     public function getId()
     {
