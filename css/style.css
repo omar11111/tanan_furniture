@@ -586,6 +586,154 @@ footer a:hover{
     color:#b8802c;
 }
 
+
+/* start main menu */
+.main-menu ul li {
+    display: inline-block;
+    list-style: outside none none;
+    padding-right: 45px;
+    position: relative;
+  }
+  .main-menu nav > ul > li:last-child {
+      padding-right: 0px;
+  }
+  .main-menu ul li a {
+    color: #1b1b1b;
+    display: inline-block;
+    font-family: "Montserrat",sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 100px;
+    text-transform: uppercase;
+  }
+  .main-menu ul li:hover > a {
+      color: #519f10;
+  }
+  .main-menu nav > ul > li > ul.submenu {
+    background: #fff none repeat scroll 0 0;
+    box-shadow: 1px 2px 5px 0 rgba(0, 0, 0, 0.1);
+    display: block;
+    left: 0;
+    padding: 20px 0 22px;
+    position: absolute;
+    top: 100%;
+    transform: rotateX(90deg);
+    transform-origin: center top 0;
+    transition: all 0.5s ease 0s;
+    visibility: hidden;
+    width: 190px;
+    z-index: 999;
+  }
+  .main-menu nav > ul > li:hover > ul.submenu {
+      transform: rotateX(0deg);
+      visibility: visible;
+  }
+  .main-menu nav > ul > li > ul.mega-menu > li ul li {
+      display: block;
+      padding: 0px;
+  }
+  .main-menu nav > ul > li > ul > li {
+      display: block;
+      padding: 0 20px;
+  }
+  .main-menu ul li ul li.mega-menu-title {
+    margin: 0 0 17px;
+    text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+  }
+  .main-menu ul li ul li a {
+    color: #000;
+    display: block;
+    font-family: "Montserrat",sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 30px;
+    text-align: left;
+    text-transform: capitalize;
+  }
+  .main-menu ul li.top-hover ul li > a::before {
+    background: #519f10 none repeat scroll 0 0;
+    content: "";
+    height: 5px;
+    left: 15px;
+    opacity: 0;
+    position: absolute;
+    top: 13px;
+    transition: all 0.3s ease-in-out 0s;
+    width: 5px;
+    z-index: 999;
+  }
+  .main-menu ul li.top-hover ul.mega-menu li > a::before {
+      left: 0px;
+  }
+  .main-menu ul li.top-hover ul li:hover > a::before {
+      opacity: 1;
+  }
+  .main-menu ul li.top-hover ul li:hover > a {
+      padding-left: 12px;
+  }
+  .main-menu ul li.mega-menu-position {
+      position: static;
+  }
+  .main-menu nav > ul > li > ul.mega-menu {
+      background-color: #fff;
+      display: block;
+      left: 0;
+      padding: 33px 30px 30px 0;
+      position: absolute;
+      text-align: left;
+      top: 100%;
+      transform: rotateX(90deg);
+      transform-origin: center top 0;
+      transition: all 0.5s ease 0s;
+      visibility: hidden;
+      width: 100%;
+      z-index: 999;
+      box-shadow: 1px 2px 5px 0 rgba(0, 0, 0, 0.1);
+  }
+  .main-menu nav > ul > li:hover > ul.mega-menu {
+      transform: rotateX(0deg);
+      visibility: visible;
+  }
+  .main-menu nav > ul > li > ul.mega-menu > li {
+      display: inline-block;
+      padding-left: 60px;
+      padding-right: 0;
+      width: 25%;
+  }
+  .main-menu nav > ul > li > ul.mega-menu > li:last-child {
+      padding-right: 0px;
+  }
+
+  .main-menu nav > ul > li > ul > li > ul.lavel-menu li {
+    padding: 0 20px;
+}
+.main-menu nav > ul > li > ul > li > ul.lavel-menu {
+    background: #fff none repeat scroll 0 0;
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.1);
+    display: block;
+    left: 100%;
+    opacity: 0;
+    padding: 20px 0px 22px;
+    position: absolute;
+    text-align: left;
+    top: 10px;
+    transition: all 0.3s ease 0s;
+    visibility: hidden;
+    width: 200px;
+    z-index: 999;
+}
+.main-menu nav > ul > li > ul > li:hover > ul.lavel-menu {
+    opacity: 1;
+    top: 0;
+    visibility: visible;
+}
+.main-menu ul li ul li a span {
+    float: right;
+}
+  
+
 @media screen and (min-width:320px) and (max-width:767px){
     .card{width: 100%;}
     

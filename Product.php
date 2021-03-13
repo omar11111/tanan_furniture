@@ -75,7 +75,8 @@ class Product extends connection implements operation
   
 
     public function selectAllData(){
-        $query = "SELECT * FROM `products_details`";
+        $query = "SELECT * FROM `products`";
+        
         return $this->runDQL($query);
     }
     public function deleteData(){

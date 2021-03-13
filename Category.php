@@ -143,7 +143,7 @@ class Category extends connection implements operation {
 
     public function selectAllData(){
         $quer="SELECT `categories`.* FROM `categories` ";
-
+        return $this->runDQL($quer);
     }
     public function deleteData(){
 

@@ -4,7 +4,7 @@ class connection {
     public $DBserverName = 'localhost';
     public $DBusername = 'root';
     public $DBpassword = '';
-    public $DBname = 'nti_ecommerce';
+    public $DBname = 'nti_ecommerce_last';
     public $con;
 
     public function __construct()
